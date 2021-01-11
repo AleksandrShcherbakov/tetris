@@ -1,10 +1,13 @@
 import figures.*;
 import org.w3c.dom.css.Rect;
 
+import java.awt.*;
 import java.util.Map;
 import java.util.Random;
 
 public class Helper {
+
+
 
     public static void printMstrix(int[][]matrix){
         for (int i=0;i<matrix.length;i++){
@@ -36,4 +39,6 @@ public class Helper {
         }
         return new ZFigure();
     }
+
+
 }

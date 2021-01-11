@@ -1,3 +1,4 @@
+import figures.Cube;
 import figures.Figure;
 import figures.IFigure;
 import figures.TFigure;
@@ -34,16 +35,19 @@ public class Rectangle extends JPanel {
 
     private static int score =0;
 
-    private static int [][] gameField;
+    private static Cube[][] gameField;
     static {
-        gameField = new int[fieldY/figureHrigth+1][fieldX/figureWidth];
+        gameField = new Cube[fieldY/figureHrigth+1][fieldX/figureWidth];
         for(int i=0;i<fieldX/figureWidth;i++) {
-            gameField[fieldY/figureHrigth][i]=1;
+            for (int j=0; j<fieldY/figureHrigth;j++){
+                gameField[j][i]=new Cube(0,null);
+            }
+            gameField[fieldY/figureHrigth][i]=new Cube(1,Color.BLACK);
         }
-        Helper.printMstrix(gameField);
+        //Helper.printMstrix(gameField);
     }
-    private int[][] figureField;
-    private int [][] previousFigure = new int[fieldY/figureHrigth+1][fieldX/figureWidth];
+    private Cube[][] figureField;
+    private Cube [][] previousFigure = new Cube[fieldY/figureHrigth+1][fieldX/figureWidth];
 
     private static boolean fieldIsEmpty=true;
 
@@ -84,9 +88,12 @@ public class Rectangle extends JPanel {
                 currentFigure=Helper.getRandomFigure();
                 currentPositionX = fieldX/2+figureWidth*(currentFigure.getSize()%2)/2;
                 currentPositionY = figureHrigth+ figureHrigth*(currentFigure.getSize()%2)/2;
-                gameField = new int[fieldY/figureHrigth+1][fieldX/figureWidth];
+                gameField = new Cube[fieldY/figureHrigth+1][fieldX/figureWidth];
                 for(int i=0;i<fieldX/figureWidth;i++) {
-                    gameField[fieldY/figureHrigth][i]=1;
+                    for (int j=0; j<fieldY/figureHrigth;j++){
+                        gameField[j][i]=new Cube(0,null);
+                    }
+                    gameField[fieldY/figureHrigth][i]=new Cube(1,Color.BLACK);
                 }
                 score=0;
                 speedOfDown=20;
@@ -139,9 +146,9 @@ public class Rectangle extends JPanel {
                         currentFigure = Helper.getRandomFigure();
                         currentPositionX = fieldX / 2 + figureWidth * (currentFigure.getSize() % 2) / 2;
                         currentPositionY = figureHrigth + figureHrigth * (currentFigure.getSize() % 2) / 2;
-                        gameField = new int[fieldY / figureHrigth + 1][fieldX / figureWidth];
+                        gameField = new Cube[fieldY / figureHrigth + 1][fieldX / figureWidth];
                         for (int i = 0; i < fieldX / figureWidth; i++) {
-                            gameField[fieldY / figureHrigth][i] = 1;
+                            gameField[fieldY / figureHrigth][i].setIsCube(1);
                         }
                     }
                     //queue.add(e.getKeyCode());
@@ -168,8 +175,8 @@ public class Rectangle extends JPanel {
 
             for (int i=0; i<gameField[0].length; i++){
                 for (int j=0; j<gameField.length-1; j++){
-                    if (gameField[j][i]!=0){
-                        g.setColor(Color.red);
+                    if (gameField[j][i]!=null && gameField[j][i].getIsCube()!=0){
+                        g.setColor(gameField[j][i].getColor());
                         g.fillRect(i*figureWidth,j*figureHrigth,figureWidth,figureHrigth);
                         g.setColor(Color.black);
                         g.drawRect(i*figureWidth,j*figureHrigth,figureWidth,figureHrigth);
@@ -179,8 +186,8 @@ public class Rectangle extends JPanel {
 
         for (int i=0; i<currentFigure.getSize(); i++){
             for (int j=0; j<currentFigure.getSize(); j++){
-                if (currentFigure.getFigureForm()[j][i]!=0){
-                    g.setColor(Color.red);
+                if (currentFigure.getFigureForm()[j][i].getIsCube()!=0){
+                    g.setColor(currentFigure.getFigureForm()[j][i].getColor());
                     g.fillRect((currentPositionX-currentFigure.getSize()*figureWidth/2)+i*figureWidth,(currentPositionY-(currentFigure.getSize()%2)*(figureHrigth/2)+j*figureHrigth),figureWidth,figureHrigth);
                     g.setColor(Color.black);
                     g.drawRect((currentPositionX-currentFigure.getSize()*figureWidth/2)+i*figureWidth,(currentPositionY-(currentFigure.getSize()%2)*(figureHrigth/2)+j*figureHrigth),figureWidth,figureHrigth);
@@ -191,8 +198,8 @@ public class Rectangle extends JPanel {
 
         for (int i=0; i<nextFigure.getSize(); i++){
             for (int j=0; j<nextFigure.getSize(); j++){
-                if (nextFigure.getFigureForm()[j][i]!=0){
-                    g.setColor(Color.red);
+                if (nextFigure.getFigureForm()[j][i].getIsCube()!=0){
+                    g.setColor(nextFigure.getFigureForm()[j][i].getColor());
                     g.fillRect((fieldX+50)+i*figureWidth,(100+j*figureHrigth),figureWidth,figureHrigth);
                     g.setColor(Color.black);
                     g.drawRect((fieldX+50)+i*figureWidth,(100+j*figureHrigth),figureWidth,figureHrigth);
@@ -233,7 +240,7 @@ public class Rectangle extends JPanel {
                 } else {
                     boolean possibleLeft=true;
                     for (int j=0; j<currentFigure.getSize();j++){
-                        if (currentFigure.getFigureForm()[j][leftColumn]!=0){
+                        if (currentFigure.getFigureForm()[j][leftColumn].getIsCube()!=0){
                             possibleLeft=false;
                             break;
                         }
@@ -264,7 +271,7 @@ public class Rectangle extends JPanel {
                 } else {
                     boolean possibleRight=true;
                     for (int j=0; j<currentFigure.getSize();j++){
-                        if (currentFigure.getFigureForm()[j][currentFigure.getSize()-1-rightColumn]!=0){
+                        if (currentFigure.getFigureForm()[j][currentFigure.getSize()-1-rightColumn].getIsCube()!=0){
                             possibleRight=false;
                             break;
                         }
@@ -283,12 +290,12 @@ public class Rectangle extends JPanel {
                 lastCommand=0;
             }
             if (isUp) {
-                byte[][]temp=currentFigure.getFigureForm();
+                Cube[][]temp=currentFigure.getFigureForm();
                 currentFigure.turnLeft();
                 boolean isPossibleToMove = isPossibleToMove();
                 for (int i=0; i<currentFigure.getSize(); i++){
                     for (int j=0; j<currentFigure.getSize(); j++){
-                        if (currentFigure.getFigureForm()[i][j]!=0){
+                        if (currentFigure.getFigureForm()[i][j].getIsCube()!=0){
                             if ((currentPositionX-figureWidth)<=0 || (currentPositionX+figureWidth)>=fieldX || !isPossibleToMove){
                                 currentFigure.setFigureForm(temp);
                                 break;
@@ -319,14 +326,17 @@ public class Rectangle extends JPanel {
         fillFigureField();
 
         boolean isPossibleToMoveDown = isPossibleToMove();
-        Helper.printMstrix(figureField);
+        //Helper.printMstrix(figureField);
 
         if (!isPossibleToMoveDown) {
-            int[][] temp = new int[fieldY / figureHrigth+1][fieldX / figureWidth];
+            Cube[][] temp = new Cube[fieldY / figureHrigth+1][fieldX / figureWidth];
             for(int i=0;i<fieldX/figureWidth;i++) {
-                temp[fieldY/figureHrigth][i]=1;
+                for (int j=0; j<fieldY/figureHrigth;j++){
+                    temp[j][i]=new Cube(0,null);
+                }
+                temp[fieldY/figureHrigth][i]=new Cube(1,Color.BLACK);
             }
-            int[][] figure;
+            Cube[][] figure;
             if (lastCommand==KeyEvent.VK_LEFT || lastCommand==KeyEvent.VK_RIGHT){
                 figure = figureField;
             } else {
@@ -334,15 +344,21 @@ public class Rectangle extends JPanel {
             }
             for (int i = 0; i < fieldX / figureWidth; i++) {
                 for (int j = 0; j <= fieldY / figureHrigth; j++) {
-                    if (gameField[j][i] == 1 || figure[j][i] == 1 ) {
-                        temp[j][i] = 1;
+                    if (gameField[j][i].getIsCube() == 1 || figure[j][i].getIsCube() == 1 ) {
+                        if (gameField[j][i].getIsCube() == 1){
+                            temp[j][i]= gameField[j][i];
+                        }else {
+                            temp[j][i] = figure[j][i];
+                        }
+                    } else {
+                        temp[j][i]=new Cube(0, null);
                     }
                 }
             }
             gameField = temp;
-            Helper.printMstrix(previousFigure);
+            //Helper.printMstrix(previousFigure);
             System.out.println("");
-            Helper.printMstrix(gameField);
+            //Helper.printMstrix(gameField);
             return isPossibleToMoveDown;
         }
         previousFigure=figureField;
@@ -394,7 +410,7 @@ public class Rectangle extends JPanel {
 
     private boolean checkGameOver() {
         for (int i = 0; i < fieldX / figureWidth; i++) {
-            if (gameField[1][i] == 1) {
+            if (gameField[1][i].getIsCube() == 1) {
                 return true;
             }
         }
@@ -408,7 +424,7 @@ public class Rectangle extends JPanel {
         for (int j = 0; j < fieldY / figureHrigth; j++) {
             int yes=1;
             for (int i = 0; i < fieldX / figureWidth; i++) {
-                yes = yes*gameField[j][i];
+                yes = yes*gameField[j][i].getIsCube();
             }
             if (yes==1){
                 rows.add(j);
@@ -416,9 +432,12 @@ public class Rectangle extends JPanel {
         }
         if (rows.size()>0){
             for (int m : rows){
-                int[][]temp = new int[fieldY/figureHrigth+1][fieldX/figureWidth];
+                Cube[][]temp = new Cube[fieldY/figureHrigth+1][fieldX/figureWidth];
                 for(int i=0;i<fieldX/figureWidth;i++) {
-                    temp[fieldY/figureHrigth][i]=1;
+                    for (int j=0; j<fieldY/figureHrigth;j++){
+                        temp[j][i]=new Cube(0,null);
+                    }
+                    temp[fieldY/figureHrigth][i]=new Cube(1,Color.BLACK);
                 }
                 for (int k=0;k<m;k++){
                     for (int s = 0; s < fieldX / figureWidth;s++){
@@ -446,7 +465,13 @@ public class Rectangle extends JPanel {
         int startX = currentX - currentFigure.getSize() / 2;
         int startY = currenyY - currentFigure.getSize() / 2;
 
-        figureField = new int[fieldY / figureHrigth+1][fieldX / figureWidth];
+        figureField = new Cube[fieldY / figureHrigth+1][fieldX / figureWidth];
+
+        for (int i=0; i<fieldX/figureWidth; i++){
+            for(int j=0; j<fieldY/figureHrigth+1; j++){
+                figureField[j][i]=new Cube(0, null);
+            }
+        }
 
         for (int i = startX; i < startX + currentFigure.getSize(); i++) {
             for (int j = startY; j < startY + currentFigure.getSize(); j++) {
@@ -471,7 +496,7 @@ public class Rectangle extends JPanel {
         for (int i = startX; i < startX + currentFigure.getSize(); i++) {
             for (int j = startY; j < startY + currentFigure.getSize(); j++) {
                 if (i >= 0 && i < fieldX / figureWidth && j > 0 && j < fieldY / figureHrigth+1) {
-                    if (figureField[j][i] * gameField[j][i] == 1) {
+                    if (figureField[j][i].getIsCube() * gameField[j][i].getIsCube() == 1) {
                         isPossibleToMove = false;
                         break;
                     }
