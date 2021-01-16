@@ -11,6 +11,7 @@ import java.awt.event.*;
 import java.lang.reflect.Array;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Rectangle extends JPanel {
     private static Thread thread;
@@ -20,18 +21,17 @@ public class Rectangle extends JPanel {
     private boolean isUp = false;
     private boolean isDown = false;
     private static int fieldX=400, fieldY=800;
-    private static int figureWidth=50;
-    private static int figureHrigth=50;
+    private static int figureWidth=40;
+    private static int figureHrigth=40;
 
     private static int startSpeedOfDown=20;
-    public static int speedOfDown=startSpeedOfDown;
-    private static int level=1;
+    public static int speedOfDown = startSpeedOfDown;
+    private static int level= 1;
 
     private static Figure currentFigure= Helper.getRandomFigure();
     private static Figure nextFigure=Helper.getRandomFigure();
 
     private static Object pauseLock = new Object();
-
 
     private static int score =0;
 
@@ -217,11 +217,9 @@ public class Rectangle extends JPanel {
     public void animate() {
         lastCommand=0;
         if (queue.size()>0) {
-            System.out.println(Arrays.asList(queue));
             int key = queue.remove();
             lastCommand=key;
             queue.clear();
-            System.out.println(Arrays.asList(queue));
             if (key == KeyEvent.VK_LEFT) isLeft = true;
             if (key == KeyEvent.VK_RIGHT) isRight = true;
             if (key == KeyEvent.VK_UP) isUp = true;
@@ -356,9 +354,6 @@ public class Rectangle extends JPanel {
                 }
             }
             gameField = temp;
-            //Helper.printMstrix(previousFigure);
-            System.out.println("");
-            //Helper.printMstrix(gameField);
             return isPossibleToMoveDown;
         }
         previousFigure=figureField;
@@ -377,7 +372,10 @@ public class Rectangle extends JPanel {
 
         public void run(){
             int downTime=0;
+
             while(true) {
+                level=score/1000+1;
+                speedOfDown=startSpeedOfDown/level;
                 rectangle.animate();
                 try {
                     Thread.sleep(50);

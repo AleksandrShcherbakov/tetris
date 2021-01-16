@@ -9,6 +9,6 @@ public class LFigure extends Figure {
                 {0, 1, 0},
                 {0, 1, 1}
         };
-        this.figureForm=fillForm(form);
+        this.figureForm=fillFormWithColor(form,super.getColor());
     }
 }

@@ -10,7 +10,7 @@ public class IFigure extends Figure {
                 {0, 1, 0, 0},
                 {0, 1, 0, 0}
         };
-        this.figureForm=fillForm(form);
+        this.figureForm=fillFormWithColor(form, super.getColor());
     }
 
     @Override
@@ -22,7 +22,7 @@ public class IFigure extends Figure {
                     {0, 0, 0, 0},
                     {0, 0, 0, 0}
             };
-            this.figureForm=fillForm(temp);
+            this.figureForm=fillFormWithColor(temp, super.getColor());
 
         } else {
             byte[][] temp = new byte[][]{
@@ -31,7 +31,7 @@ public class IFigure extends Figure {
                     {0, 1, 0, 0},
                     {0, 1, 0, 0}
             };
-            this.figureForm=fillForm(temp);
+            this.figureForm=fillFormWithColor(temp, super.getColor());
         }
     }
 }

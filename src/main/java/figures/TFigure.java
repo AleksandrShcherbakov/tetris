@@ -9,6 +9,6 @@ public class TFigure extends Figure {
                 {1, 1, 1},
                 {0, 0, 0}
         };
-        this.figureForm=fillForm(form);
+        this.figureForm=fillFormWithColor(form,super.getColor());
     }
 }

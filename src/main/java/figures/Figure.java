@@ -69,7 +69,7 @@ public class Figure {
         this.figureForm = figureForm;
     }
 
-    public Color getColor() {
+    public  Color getColor() {
         return color;
     }
 
@@ -84,6 +84,22 @@ public class Figure {
     static Cube[][] fillForm(byte[][] form){
         Cube emptyCube = new Cube(0,null);
         Cube fillCube = new Cube(1, getRandomColor());
+        Cube[][]cube = new Cube[form.length][form.length];
+        for (int i=0; i<form.length;i++){
+            for (int j=0; j<form.length; j++){
+                if (form[j][i]==0){
+                    cube[j][i]=emptyCube;
+                } else {
+                    cube[j][i]=fillCube;
+                }
+            }
+        }
+        return cube;
+    }
+
+    static Cube[][] fillFormWithColor(byte[][] form, Color color){
+        Cube emptyCube = new Cube(0,null);
+        Cube fillCube = new Cube(1, color);
         Cube[][]cube = new Cube[form.length][form.length];
         for (int i=0; i<form.length;i++){
             for (int j=0; j<form.length; j++){

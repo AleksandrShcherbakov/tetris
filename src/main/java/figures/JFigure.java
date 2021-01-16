@@ -9,6 +9,6 @@ public class JFigure extends Figure {
                 {0, 1, 0},
                 {1, 1, 0}
         };
-        this.figureForm=fillForm(form);
+        this.figureForm=fillFormWithColor(form,super.getColor());
     }
 }
