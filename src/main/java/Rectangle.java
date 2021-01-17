@@ -55,7 +55,9 @@ public class Rectangle extends JPanel {
     static JLabel label = new JLabel(labelText);
 
 
-    Queue<Integer> queue = new ArrayDeque<Integer>();
+    Queue<Integer> queueLeft = new ArrayDeque<Integer>();
+    Queue<Integer> queueRight = new ArrayDeque<Integer>();
+    Queue<Integer> queueUp = new ArrayDeque<Integer>();
 
     int lastCommand;
 
@@ -128,31 +130,23 @@ public class Rectangle extends JPanel {
 
             @Override
             public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode()==KeyEvent.VK_LEFT || e.getKeyCode()==KeyEvent.VK_RIGHT || e.getKeyCode()==KeyEvent.VK_UP){
-                    queue.add(e.getKeyCode());
-                }
-                if (e.getKeyCode()==KeyEvent.VK_DOWN) {
-                    isDown=true;
-                }
+                if (e.getKeyCode()==KeyEvent.VK_LEFT) isLeft=true;
+                if (e.getKeyCode()==KeyEvent.VK_RIGHT) isRight=true;
+                if (e.getKeyCode()==KeyEvent.VK_UP) isUp=true;
+                if (e.getKeyCode()==KeyEvent.VK_DOWN) isDown=true;
+                if (isLeft) queueLeft.add(1);
+                if (isRight) queueRight.add(2);
+                if (isUp) queueUp.add(3);
+
+
             }
 
             @Override
             public void keyReleased(KeyEvent e) {
-                if (e.getKeyCode()==KeyEvent.VK_DOWN) {
-                    isDown=false;
-                }
-                else {
-                    if (e.getKeyChar() == 'r') {
-                        currentFigure = Helper.getRandomFigure();
-                        currentPositionX = fieldX / 2 + figureWidth * (currentFigure.getSize() % 2) / 2;
-                        currentPositionY = figureHrigth + figureHrigth * (currentFigure.getSize() % 2) / 2;
-                        gameField = new Cube[fieldY / figureHrigth + 1][fieldX / figureWidth];
-                        for (int i = 0; i < fieldX / figureWidth; i++) {
-                            gameField[fieldY / figureHrigth][i].setIsCube(1);
-                        }
-                    }
-                    //queue.add(e.getKeyCode());
-                }
+                if (e.getKeyCode()==KeyEvent.VK_LEFT) isLeft=false;
+                if (e.getKeyCode()==KeyEvent.VK_RIGHT) isRight=false;
+                if (e.getKeyCode()==KeyEvent.VK_UP) isUp=false;
+                if (e.getKeyCode()==KeyEvent.VK_DOWN) isDown=false;
             }
         });
 
@@ -215,17 +209,20 @@ public class Rectangle extends JPanel {
     int rightColumn=0;
 
     public void animate() {
-        lastCommand=0;
+        /*lastCommand=0;
         if (queue.size()>0) {
+            System.out.println(Arrays.asList(queue));
             int key = queue.remove();
             lastCommand=key;
+
             queue.clear();
             if (key == KeyEvent.VK_LEFT) isLeft = true;
             if (key == KeyEvent.VK_RIGHT) isRight = true;
-            if (key == KeyEvent.VK_UP) isUp = true;
+            if (key == KeyEvent.VK_UP) isUp = true;*/
             //if (key == KeyEvent.VK_DOWN) isDown = true;
 
-            if (isLeft) {
+            if (queueLeft.size()>0) {
+                queueLeft.clear();
                 if ((currentPositionX-currentFigure.getSize()*figureWidth/2)>=figureWidth) {
                     currentPositionX = currentPositionX - figureWidth;
                     boolean isPossibleToMove = isPossibleToMove();
@@ -255,13 +252,13 @@ public class Rectangle extends JPanel {
                 }
                 lastCommand=0;
             }
-            if (isRight) {
+            if (queueRight.size()>0) {
+                queueRight.clear();
                 if ((currentPositionX+currentFigure.getSize()*figureWidth/2)<=fieldX-figureWidth) {
                     currentPositionX = currentPositionX + figureWidth;
                     boolean isPossibleToMove = isPossibleToMove();
                     if (!isPossibleToMove){
                         currentPositionX = currentPositionX - figureWidth;
-                        queue.clear();
                     }
                     if (leftColumn>0) {
                         leftColumn--;
@@ -287,7 +284,8 @@ public class Rectangle extends JPanel {
                 }
                 lastCommand=0;
             }
-            if (isUp) {
+            if (queueUp.size()>0) {
+                queueUp.clear();
                 Cube[][]temp=currentFigure.getFigureForm();
                 currentFigure.turnLeft();
                 boolean isPossibleToMove = isPossibleToMove();
@@ -303,11 +301,11 @@ public class Rectangle extends JPanel {
                 }
             }
 
-            isLeft = false;
+            /*isLeft = false;
             isRight = false;
-            isUp = false;
+            isUp = false;*/
             //isDown = false;
-        }
+        //}
         this.repaint();
     }
 
@@ -371,6 +369,7 @@ public class Rectangle extends JPanel {
         }
 
         public void run(){
+
             int downTime=0;
 
             while(true) {
@@ -378,8 +377,11 @@ public class Rectangle extends JPanel {
                 speedOfDown=startSpeedOfDown/level;
                 rectangle.animate();
                 try {
-                    Thread.sleep(50);
-                    if (isDown || downTime==speedOfDown) {
+                    Thread.sleep(10);
+                    if (isDown || downTime==speedOfDown*5) {
+                        if (isDown){
+                            Thread.sleep(50-10);
+                        }
                         fillFigureField();
                         previousFigure=figureField;
                         currentPositionY = currentPositionY + figureHrigth;
