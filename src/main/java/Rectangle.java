@@ -58,6 +58,7 @@ public class Rectangle extends JPanel {
     Queue<Integer> queueLeft = new ArrayDeque<Integer>();
     Queue<Integer> queueRight = new ArrayDeque<Integer>();
     Queue<Integer> queueUp = new ArrayDeque<Integer>();
+    Queue<Integer> queueDown = new ArrayDeque<Integer>();
 
     int lastCommand;
 
@@ -137,6 +138,7 @@ public class Rectangle extends JPanel {
                 if (isLeft) queueLeft.add(1);
                 if (isRight) queueRight.add(2);
                 if (isUp) queueUp.add(3);
+                if (isDown) queueDown.add(4);
 
 
             }
